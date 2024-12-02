@@ -101,6 +101,12 @@ export default function Home() {
         >
           page link
         </a>
+        <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="/client"
+        >
+          page client
+        </a>
       </footer>
     </div>
   );
