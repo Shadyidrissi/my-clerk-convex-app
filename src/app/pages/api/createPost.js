@@ -19,7 +19,7 @@ export default async function handler(req, res) {
       title: req.body.title,
       description: req.body.description,
       price: req.body.price,
-      userId: user.id,
+      // userId: user.id,
     });
 
     res.status(200).json(post);

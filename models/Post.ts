@@ -4,8 +4,9 @@ const PostSchema = new mongoose.Schema({
   title: String,
   description: String,
   price: Number,
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  // userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
 
-const Post= mongoose.models.Post || mongoose.model("Post", PostSchema);
-export default Post
+const Post = mongoose.models.Post || mongoose.model("Post", PostSchema);
+export default Post;
+

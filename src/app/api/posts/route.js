@@ -5,13 +5,30 @@ import { currentUser } from '@clerk/nextjs/server';
 import { request } from 'http';
 
 export async function POST(request) {
-  const {title , description,price}= await request.json()
-  await connectToDB();
-  await Post.create({title,description,price});
-  return NextResponse.json({message:"Created Done"},{status:201})
-}
+  try {
+    
+    const {title , description,price}= await request.json()
+    await connectToDB();
+    await Post.create({title,description,price});
+    return NextResponse.json({message:"Created Done"},{status:201})
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+  }
 export async function GET() {
-  await connectToDB();
-  const posts =await Post.find();
-  return NextResponse.json(posts)
+  try {
+    await connectToDB();
+    const posts = await Post.find();
+    return NextResponse.json(posts);
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
 }

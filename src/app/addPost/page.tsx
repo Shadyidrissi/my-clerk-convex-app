@@ -10,9 +10,9 @@ export default function CreatePost() {
   const createPost = async () => {
     try {
       const response = await axios.post('http://localhost:3000/api/posts', { 
-        title,
-        description,
-        price,
+        title:title,
+        description:description,
+        price:price,
       });      
       console.log("Post created successfully:", response.data);
     } catch (error) {
