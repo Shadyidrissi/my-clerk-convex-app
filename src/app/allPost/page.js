@@ -7,7 +7,11 @@ export default function CreatePost() {
 
   const createPost = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/posts');
+      const response = await axios.get('http://localhost:3000/api/posts', {
+        headers: {
+          Authorization: process.env.YOUR_SECRET_KEY,
+        },
+      });
       setData(response.data); // Set only the data portion
       console.log("Data fetched successfully:", response.data);
     } catch (error) {

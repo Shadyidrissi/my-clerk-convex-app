@@ -11,7 +11,11 @@ function Page({ params }) {
     const fetchData = async () => {
       try {
         const { id } = await params; // Unwrap the params Promise
-        const response = await axios.get(`/api/posts/${id}`);
+        const response = await axios.get(`/api/posts/${id}`,{
+          headers: {
+            Authorization: process.env.YOUR_SECRET_KEY,
+          },
+        });
         setData(response.data);
       } catch (err) {
         console.error("Error fetching data:", err);

@@ -1,7 +1,11 @@
 import connectToDB from "../../../../lib/connectToDB";
 import Post from "../../../../../models/Post";
 
-export async function GET(request, { params }) {
+export async function GET(req, { params }) {
+    const authHeader = req.headers.authorization;
+    if (authHeader !== process.env.YOUR_SECRET_KEY) {
+      return res.status(403).json({ message: "غير مصرح بالوصول" });
+    }
     try {
         const { id } = params; // Assume 'id' here is the user ID passed in params
         await connectToDB(); // Establish a database connection
