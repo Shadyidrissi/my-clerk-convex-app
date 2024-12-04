@@ -119,6 +119,12 @@ export default function Home() {
         >
           add post
         </a>
+        <a
+          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+          href="/allPost"
+        >
+          all posts
+        </a>
       </footer>
     </div>
   );
