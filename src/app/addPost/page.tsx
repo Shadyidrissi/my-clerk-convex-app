@@ -8,8 +8,11 @@ export default function CreatePost() {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
 
-  const sharedSecret = process.env.HMAC_KEY ; // السر المشترك
-  console.log(`hello ${process.env.HMAC_KEY}`)
+  const sharedSecret = process.env.HMAC_KEY ; 
+  if (!sharedSecret) {
+    console.log("error not find the HMAC Security")
+    return null
+  }
   const createPost = async () => {
     try {
       const payload = { title, description, price };
