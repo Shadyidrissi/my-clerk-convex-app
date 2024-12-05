@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  env: {
+    HMAC_KEY: process.env.HMAC_KEY,
+  },
 };
 
 export default nextConfig;

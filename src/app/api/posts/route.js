@@ -4,7 +4,8 @@ import Post from "../../../../models/Post";
 import crypto from "crypto"; // مكتبة للتحقق من HMAC
 import { currentUser } from '@clerk/nextjs/server';
 
-const SHARED_SECRET = "MY_SHARED_SECRET"; // نفس السر المستخدم في العميل
+const SHARED_SECRET = process.env.HMAC_KEY ; // نفس السر المستخدم في العميل
+console.log( `${process.env.HMAC_KEY}`)
 
 export async function POST(request) {
   try {

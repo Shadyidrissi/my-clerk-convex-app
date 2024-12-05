@@ -8,8 +8,8 @@ export default function CreatePost() {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
 
-  const sharedSecret = "MY_SHARED_SECRET"; // السر المشترك
-
+  const sharedSecret = process.env.HMAC_KEY ; // السر المشترك
+  console.log(`hello ${process.env.HMAC_KEY}`)
   const createPost = async () => {
     try {
       const payload = { title, description, price };
