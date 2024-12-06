@@ -1,38 +1,57 @@
 "use client";
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import axios from "axios";
+import CryptoJS from "crypto-js";
 
-export default function CreatePost() {
-  const [data, setData] = useState([]); // Initialize as an array
+export default function PostsPage() {
+  const [posts, setPosts] = useState([]);
+  const [error, setError] = useState(null);
 
-  const createPost = async () => {
+  const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/posts', {
+      const clientTimestamp = Date.now().toString();
+      const path = "/api/posts";
+      const message = `${path}:${clientTimestamp}`;
+      const sharedSecret = process.env.HMAC_KEY;
+
+      if (!sharedSecret) {
+        throw new Error("HMAC_KEY is not defined in environment variables");
+      }
+
+      const signature = CryptoJS.HmacSHA256(message, sharedSecret).toString();
+
+      const response = await axios.get("http://localhost:3000/api/posts", {
         headers: {
-          Authorization: process.env.YOUR_SECRET_KEY,
+          "x-signature": signature,
+          "x-timestamp": clientTimestamp,
         },
       });
-      setData(response.data); // Set only the data portion
-      console.log("Data fetched successfully:", response.data);
-    } catch (error) {
-      console.error("Error fetching posts:", error);
+
+      setPosts(response.data);
+    } catch (err) {
+      console.error("Error occurred:", err);
+      setError(err.response?.data?.error || "Error fetching posts");
     }
   };
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <div>
-      <button onClick={createPost}>Fetch Posts</button> {/* Button to trigger fetching */}
-      {data.length > 0 ? (
-        data.map((e, index) => (
-          <div key={index}>
-            <p>Title: {e.title}</p>
-            <p>Description: {e.description}</p>
-            <p>Price: {e.price}</p>
-          </div>
-        ))
-      ) : (
-        <p>No posts available. Click the button to fetch posts.</p>
-      )}
+      <button onClick={() => fetchData()}>Fetch</button>
+      {error && <p>{error}</p>}
+      <ul>
+        {posts.map((post,index) => (
+          <li key={index}>
+            <h2>{post.title}</h2>
+            <p>{post.description}</p>
+            <p>Price: {post.price}</p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
