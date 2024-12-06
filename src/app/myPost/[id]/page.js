@@ -2,18 +2,30 @@
 
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import CryptoJS from "crypto-js";
 
 function Page({ params }) {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
     const fetchData = async () => {
       try {
+        const clientTimestamp = Date.now().toString();
+        const path = "/api/posts";
+        const message = `${path}:${clientTimestamp}`;
+        const sharedSecret = process.env.HMAC_KEY;
+
+        if (!sharedSecret) {
+          throw new Error("HMAC_KEY is not defined in environment variables");
+        }
+
+        const signature = CryptoJS.HmacSHA256(message, sharedSecret).toString();
         const { id } = await params; // Unwrap the params Promise
-        const response = await axios.get(`/api/posts/${id}`,{
+        // console.log(message,sharedSecret,signature,clientTimestamp)
+        const response = await axios.get(`http://localhost:3000/api/posts/${id}`, {
           headers: {
-            Authorization: process.env.YOUR_SECRET_KEY,
+            "x-signature": signature,
+            "x-timestamp": clientTimestamp,
           },
         });
         setData(response.data);
@@ -23,8 +35,7 @@ function Page({ params }) {
       }
     };
 
-    fetchData();
-  }, [params]);
+
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -32,6 +43,8 @@ function Page({ params }) {
 
   return (
     <div>
+      <button onClick={() => fetchData()}>Fetch</button>
+
       <h1>Posts</h1>
       {data ? (
         <ul>
